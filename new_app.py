@@ -1,7 +1,6 @@
 import streamlit as st
 from moviepy.editor import VideoFileClip
 from pydub import AudioSegment
-import whisper
 import os
 import json
 import nltk
@@ -15,13 +14,25 @@ from langchain_core.prompts import (
     SystemMessagePromptTemplate
 )
 from pydantic import BaseModel, Field
-GROQ_API_KEY = os.environ["GROQ_API_KEY"] = "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"
+import wave
+from vosk import Model, KaldiRecognizer
 
-# Ensure NLTK punkt package is available for sentence tokenization
 nltk.download('punkt')
 
-# Set up summarization pipeline
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+GROQ_API_KEY = os.environ["GROQ_API_KEY"] = "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"
+
+
+llm = ChatGroq(model="llama3-groq-70b-8192-tool-use-preview", api_key=GROQ_API_KEY)
+
+prompt = ChatPromptTemplate([
+    SystemMessagePromptTemplate.from_template(
+        "You are an expert in the transcription extracted from the text. Answer the question according to the transcription."
+    ),
+    HumanMessagePromptTemplate.from_template(
+        "Here is the transcription text:\n\n{text}\n\nBased on the transcription, please answer the following question:\n\n{question}"
+    )
+])
 
 # Function to split text into manageable chunks for summarization
 def split_text(text, max_tokens=512):
@@ -48,7 +59,10 @@ def split_text(text, max_tokens=512):
 # Summarize transcribed text
 def summarize_text(text):
     chunks = split_text(text)
-    summaries = [summarizer(chunk, max_length=150, min_length=50, do_sample=False)[0]['summary_text'] for chunk in chunks]
+    summaries = []
+    for chunk in chunks:
+        summary = summarizer(chunk, max_length=150, min_length=50, do_sample=False)
+        summaries.append(summary[0]['summary_text'])
     return " ".join(summaries)
 
 # Save transcription and summaries to JSON
@@ -56,32 +70,12 @@ def save_to_json(data, filename="data.json"):
     with open(filename, "w") as f:
         json.dump(data, f, indent=4)
 
-# Define chatbot class for querying the transcription
-class Search(BaseModel):
-    setup: str = Field(..., text="The transcribed text")
-    question: str = Field(...)
-    answer: str = Field(..., description="Answer to user's question based on the transcription.")
-
-# Initialize chatbot with GROQ API
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-llm = ChatGroq(model="llama3-groq-70b-8192-tool-use-preview", api_key=GROQ_API_KEY)
-
-# Create ChatPromptTemplate for chatbot queries
-prompt = ChatPromptTemplate([
-    SystemMessagePromptTemplate.from_template(
-        "You are an expert in the transcription extracted from the text. Answer the question according to the transcription."
-    ),
-    HumanMessagePromptTemplate.from_template(
-        "Here is the transcription text:\n\n{text}\n\nBased on the transcription, please answer the following question:\n\n{question}"
-    )
-])
-
-# Define the integration for Person A's and B's functionalities
+# Define the integration for the functionalities
 def main():
     st.title("StreamScribe - Video Processing, Summarization, and Q&A")
 
     uploaded_file = st.file_uploader("Upload a video file", type=["mp4", "mov", "avi"])
-    model_size = st.selectbox("Choose Whisper model size", ["base", "small", "medium", "large"])
+    vosk_model_path = "model"  # Path to the Vosk model directory
 
     if uploaded_file:
         video_path = save_uploaded_file(uploaded_file)
@@ -90,36 +84,35 @@ def main():
         if audio_path:
             st.success("Audio extracted successfully.")
             chunks = split_audio(audio_path)
-            st.write(chunks)
+            
             if chunks:
                 st.success("Audio split into chunks successfully.")
 
                 # Transcribe audio
                 with st.spinner("Transcribing audio..."):
-                    transcript = transcribe_audio(chunks, model_size)
+                    transcript = transcribe_audio(chunks, vosk_model_path)
 
                 if transcript:
                     st.success("Transcription completed.")
                     st.text_area("Transcript", transcript, height=300)
 
                     # Summarize transcript and generate structured JSON
-                    
                     summary = summarize_text(transcript)
-                    data = { # for Gali
-                        "transcript": transcript, "hello my name is shahar"
+                    data = {
+                        "transcript": transcript,
                         "headline": summary,
                         "segments": [
                             {
-                                "start_time": "00:00:00",  # start time for all the text
-                                "end_time": "00:05:00",   # Example
+                                "start_time": "00:00:00",  # Replace with actual start time
+                                "end_time": "00:05:00",    # Replace with actual end time
                                 "headline": summary,
-                                "keywords": ["hello"," my", "name is shahar"] #split of the text
+                                "keywords": transcript.split()[:10]  # Example keywords
                             }
                         ]
                     }
                     save_to_json(data)
 
-                    # Display summary and allow user to ask questions- this is the all summerized text
+                    # Display summary and allow user to ask questions
                     st.text_area("Summary", summary, height=200)
                     question = st.text_input("Ask a question about the transcription:")
                     if question:
@@ -132,7 +125,7 @@ def main():
         else:
             st.error("Audio extraction failed.")
 
-# Supporting functions from Person A's implementation
+# Supporting functions
 def save_uploaded_file(uploaded_file):
     upload_dir = "uploads"
     os.makedirs(upload_dir, exist_ok=True)
@@ -166,10 +159,29 @@ def split_audio(audio_path, chunk_length_ms=600000):
         st.error(f"Error splitting audio: {e}")
         return []
 
-def transcribe_audio(chunks, model_size="base"):
+def transcribe_audio(chunks, model_path):
     try:
-        model = whisper.load_model(model_size)
-        transcripts = [model.transcribe(chunk)["text"] for chunk in chunks]
+        transcripts = []
+        # Load Vosk model
+        if not os.path.exists(model_path):
+            st.error(f"Vosk model not found at {model_path}. Please download and place it there.")
+            return ""
+        model = Model(model_path)
+
+        for chunk in chunks:
+            wf = wave.open(chunk, "rb")
+            rec = KaldiRecognizer(model, wf.getframerate())
+            rec.SetWords(True)
+            transcript = ""
+            while True:
+                data = wf.readframes(4000)
+                if len(data) == 0:
+                    break
+                if rec.AcceptWaveform(data):
+                    result = rec.Result()
+                    result_json = json.loads(result)
+                    transcript += result_json.get('text', '') + ' '
+            transcripts.append(transcript.strip())
         return " ".join(transcripts)
     except Exception as e:
         st.error(f"Error transcribing audio: {e}")
