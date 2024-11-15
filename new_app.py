@@ -5,6 +5,8 @@ import os
 import json
 from vosk import Model, KaldiRecognizer
 import wave
+from sum_model import SummarizationProcessor, QnAProcessor  # Import SummarizationProcessor
+import tempfile
 
 
 # Define functions
@@ -32,12 +34,12 @@ def extract_audio(video_path):
 def split_audio(audio_path, chunk_length_ms=600000):
     try:
         audio = AudioSegment.from_file(audio_path)
-        chunks = [audio[i:i + chunk_length_ms] for i in range(0, len(audio), chunk_length_ms)]
         chunk_files = []
-        for idx, chunk in enumerate(chunks):
-            chunk_filename = f"audio_chunk_{idx}.wav"
-            chunk.export(chunk_filename, format="wav")
-            chunk_files.append(chunk_filename)
+        for i in range(0, len(audio), chunk_length_ms):
+            chunk = audio[i:i + chunk_length_ms]
+            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+            chunk.export(temp_file.name, format="wav")
+            chunk_files.append(temp_file.name)
         return chunk_files
     except Exception as e:
         st.error(f"Error splitting audio: {e}")
@@ -45,28 +47,36 @@ def split_audio(audio_path, chunk_length_ms=600000):
 
 
 def transcribe_audio(chunks, model_path):
+    if not os.path.exists(model_path):
+        st.error(f"Model path '{model_path}' does not exist. Please check the Vosk model path.")
+        return [], []
+
     try:
         transcripts = []
-        timestamps = []  # To store start and end times of each chunk
+        timestamps = []
         model = Model(model_path)
 
         for idx, chunk in enumerate(chunks):
             wf = wave.open(chunk, "rb")
             rec = KaldiRecognizer(model, wf.getframerate())
             rec.SetWords(True)
+
             transcript = ""
-            start_time = idx * 600  # assuming each chunk is 600 seconds, adjust if different
-            end_time = start_time + 600
             while True:
                 data = wf.readframes(4000)
                 if len(data) == 0:
                     break
                 if rec.AcceptWaveform(data):
-                    result = rec.Result()
-                    result_json = json.loads(result)
+                    result_json = json.loads(rec.Result())
                     transcript += result_json.get('text', '') + ' '
+
+            wf.close()
             transcripts.append(transcript.strip())
-            timestamps.append({"start_time": start_time, "end_time": end_time, "transcript": transcript.strip()})
+            timestamps.append({
+                "start_time": idx * (len(transcript.split()) / 130) / 60,
+                "end_time": (idx + 1) * (len(transcript.split()) / 130) / 60,
+                "transcript": transcript.strip()
+            })
 
         return transcripts, timestamps
     except Exception as e:
@@ -74,17 +84,12 @@ def transcribe_audio(chunks, model_path):
         return [], []
 
 
-def save_to_json(data, filename="data.json"):
-    with open(filename, "w") as f:
-        json.dump(data, f, indent=4)
-
-
 # Main app
 def main():
     st.title("StreamScribe - Video Processing, Summarization, and Q&A")
 
     uploaded_file = st.file_uploader("Upload a video file", type=["mp4", "mov", "avi"])
-    vosk_model_path = "model"  # Path to the Vosk model directory
+    vosk_model_path = "C:\\Users\\Galis\\Documents\\GitHub\\streamscribe\\vosk-model-small-en-us-0.15"
 
     if uploaded_file:
         video_path = save_uploaded_file(uploaded_file)
@@ -103,13 +108,21 @@ def main():
 
                 if transcripts:
                     st.success("Transcription completed.")
-                    processed_data = process_transcription_with_summary(transcripts, timestamps)
-                    st.json(processed_data)  # Display structured data in Streamlit
+
+                    # Summarize transcription with short summaries
+                    summarizer = SummarizationProcessor()
+                    processed_data = summarizer.process_transcription_with_summary(transcripts, timestamps, max_summary_length=30)  # Set summary length to 30 tokens
+                    st.json(processed_data)
+
+                    # Display summarized data with timestamps
+                    for item in processed_data:
+                        st.write(f"Timestamp: {item['timestamp']}, Summary: {item['summary']}")
 
                     # Allow user to ask questions
                     question = st.text_input("Ask a question about the transcription:")
                     if question:
-                        answer = TranscriptionProcessor.llm({"setup": transcripts, "question": question}).answer
+                        qna_processor = QnAProcessor()
+                        answer = qna_processor.ask_question(" ".join(transcripts), question)
                         st.write("Answer:", answer)
                 else:
                     st.error("Transcription failed.")

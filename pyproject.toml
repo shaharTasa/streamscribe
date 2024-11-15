@@ -20,6 +20,7 @@ nltk = "^3.9.1"
 torch = "^2.5.1"
 whisper = "^1.1.10"
 vosk = "^0.3.45"
+sentencepiece = "^0.2.0"
 
 
 [tool.poetry.group.dev.dependencies]
