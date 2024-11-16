@@ -1,8 +1,9 @@
 import os
 
-ffmpeg_path = r"C:\ffmpeg-master-latest-win64-gpl\bin"
+ffmpeg_path = r"C:\Users\matar.aviv\Desktop\DS17\ffmpeg-2024-11-13-git-322b240cea-essentials_build\ffmpeg-2024-11-13-git-322b240cea-essentials_build\bin"
 if os.path.exists(ffmpeg_path):
     os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
+GROQ_API_KEY = os.environ["GROQ_API_KEY"] = "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"
 
 import streamlit as st
 import pandas as pd
@@ -100,8 +101,8 @@ def main():
                                 st.session_state.backend.process_video(temp_path)
                             )
                             for i in range(100):
+                                time.sleep(0.005)  # Simulate processing time
                                 progress_bar.progress(i + 1)
-                                time.sleep(0.01)
                     progress_bar_container.empty()
                     st.success('Video processed successfully  ✓')
                     st.session_state.current_file = uploaded_file.name
@@ -122,7 +123,7 @@ def main():
                 st.text_area(
                     "",
                     st.session_state.processed_content.full_text,
-                    height=transcript_height
+                    height=200#transcript_height
                 )
 
             # Create tabs
@@ -136,7 +137,7 @@ def main():
                 st.text_area(
                     "",
                     st.session_state.processed_content.overall_summary,
-                    height=summary_height
+                    height=200#summary_height
                 )
 
             with tab2:
