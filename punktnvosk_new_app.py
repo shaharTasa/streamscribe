@@ -149,6 +149,8 @@ def main():
     vosk_model_path = "model"  # Path to the Vosk model directory
 
     if uploaded_file:
+        # Display video
+        st.video(uploaded_file)
         video_path = save_uploaded_file(uploaded_file)
         audio_path = extract_audio(video_path)
 
