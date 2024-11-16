@@ -176,7 +176,7 @@ class SummarizationProcessor:
 class QnAProcessor:
     """Handles Q&A using the groq-api"""
 
-    def __init__(self, groq_api_key=None, model_name="llama3-groq-70b-8192-tool-use-preview"):
+    def __init__(self, groq_api_key='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', model_name="llama3-groq-70b-8192-tool-use-preview"):
         """
         Initialize the QnAProcessor.
 
