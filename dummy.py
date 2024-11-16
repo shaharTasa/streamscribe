@@ -12,7 +12,7 @@ def extract_audio_dummy(video_file):
 
 def split_audio_dummy(audio_path):
     for i in range(100):
-         time.sleep(0.000000005)  # Simulate work (e.g., transcribing)
+         time.sleep(0.0000000005)  # Simulate work (e.g., transcribing)
     return [f"chunk_{i}.wav" for i in range(1, 4)]
 
 
@@ -22,11 +22,12 @@ def transcribe_audio_dummy(audio_chunks):
     return "This is a dummy transcription text extracted from the video."
 
 
-def get_text_area_height(text: str, line_height: int = 20, max_lines: int = 20):
+def get_text_area_height(text: str, line_height: int = 20, min_height: int = 68, max_lines: int = 20):
     # Split the text into lines
     lines = text.split('\n')
     num_lines = min(len(lines), max_lines)  # Limit to max_lines to avoid too much space
-    return num_lines * line_height
+    height = num_lines * line_height # Calculate height
+    return max(height, min_height) # Ensure the height is at least the minimum height
 
 
 def summarize_text_dummy(transcription):
@@ -59,16 +60,38 @@ def answer_question_dummy(question, transcription):
     return "This is a placeholder answer based on the dummy transcription."
 
 
+def set_custom_css():
+    st.markdown("""
+    <style>
+    /* Target multiple container types */
+    .stApp {
+        background-color: #401856 !important;
+    }
+    .reportview-container {
+        background-color: #401856 !important;
+    }
+    .main .block-container {
+        background-color: #401856 !important;
+    }
+
+    /* Optional: Adjust text color for readability */
+    .stMarkdown, .stText, .stTextInput>div>div>input {
+        color: white !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+
 # Main application
 def main():
-    ###########################
     st.set_page_config(page_title="StreamScribe", page_icon="🎥",  initial_sidebar_state="collapsed")#layout="wide",
+    #set_custom_css()
     with st.sidebar:
-        #st.image("logo.png", width=200)
+        #st.image(r"C:\Users\matar.aviv\Desktop\DS17\final project\LOGOOO.png", width=200)
         st.title("StreamScribe")
         st.write("Video Analysis Tool")
-    ###########################
     st.title("StreamScribe - Video Helper")
+
 
     # Create a placeholder for the file uploader
     file_uploader_placeholder = st.empty()
@@ -109,27 +132,13 @@ def main():
         # Success message after processing
         #transcript = transcribe_audio_dummy(chunks)
         st.success('Transcription completed  ✓')
-#########
+
         with st.expander("Show transcript"):
-            height = get_text_area_height(transcript)
+            transcript_height = get_text_area_height(transcript)
 
             # Display the text area with dynamic height
-            st.text_area("", transcript, height=height)
-#########
-        # # Initialize session state for transcript visibility
-        # if 'show_transcript' not in st.session_state:
-        #     st.session_state.show_transcript = False
-        #
-        # # Create a button to show/hide transcript
-        # button_label = "Hide Transcript" if st.session_state.show_transcript else "Show Transcript"
-        # if st.button(button_label):
-        #     st.session_state.show_transcript = not st.session_state.show_transcript
-        #     st.rerun()
-        #
-        # # Display transcript if show_transcript is True
-        # if st.session_state.show_transcript:
-        #     st.text_area("Transcript", transcript, height=200)
-############################
+            st.text_area("", transcript, height=transcript_height)
+
         summary = summarize_text_dummy(transcript)
         #st.success(f"Summary created: {summary}")
 
@@ -141,7 +150,10 @@ def main():
 
         with tab1:
             st.write("### Video Summary")
-            st.text_area("Summary", summary, height=200)
+            summay_height = get_text_area_height(transcript)
+
+            # Display the text area with dynamic height
+            st.text_area("", summary, height=summay_height)
 
         with tab2:
             st.write("### Subject Breakdown")
@@ -154,6 +166,11 @@ def main():
             if question:
                 answer = answer_question_dummy(question, transcript)
                 st.write(answer)
+                # col1, col2, col3 = st.columns(3)
+                # col1.metric("Temperature", "70 °F", "1.2 °F")
+                # col2.metric("Wind", "9 mph", "-8%")
+                # col3.metric("Humidity", "86%", "4%")
+
 
 # Run the app
 if __name__ == "__main__":
