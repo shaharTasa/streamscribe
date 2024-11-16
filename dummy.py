@@ -180,3 +180,12 @@ def main():
 # Run the app
 if __name__ == "__main__":
     main()
+##########################################
+# Spacer to push the logo down
+st.markdown("<div style='height: 400px;'></div>", unsafe_allow_html=True)  # Adjust height as needed
+
+# Add logo at the bottom
+col1, col2, col3 = st.columns(3)
+with col2:
+    st.image(r"C:\Users\matar.aviv\Desktop\DS17\final project\StreamScribe flat2.png", width=200)
+##########################################
