@@ -117,8 +117,9 @@ def main():
 
                     # Summarize transcription with short summaries
                     summarizer = SummarizationProcessor()
-                    processed_data = summarizer.process_transcription_with_summary(transcripts, timestamps, max_summary_length=20)  # Set summary length to 30 tokens
-                    st.json(processed_data)
+                    processed_data = summarizer.process_transcription_with_summary(transcripts, timestamps,
+                                                                                   max_summary_length=20)
+                    st.json(processed_data)  # processed_data is now a valid JSON object
 
                     # Summarize the entire transcription
                     st.subheader("Summary of Entire Transcription")

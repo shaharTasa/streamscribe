@@ -23,80 +23,117 @@ class Search(BaseModel):
 
 
 class SummarizationProcessor:
-    def __init__(self):
-        # Load the pre-trained T5 model and tokenizer
-        model_name = "t5-small"
+    def __init__(self, model_name="t5-small"):
+        """
+        Initialize the summarization processor with a pre-trained T5 model.
+
+        Args:
+            model_name (str): The pre-trained T5 model name to use.
+        """
         self.tokenizer = T5Tokenizer.from_pretrained(model_name)
         self.model = T5ForConditionalGeneration.from_pretrained(model_name)
 
     def summarize_chunk(self, chunk, max_input_length=512, max_summary_length=50):
         """
-        Summarize a chunk of text using T5, ensuring it is a concise one-sentence summary.
+        Summarize a chunk of text using T5, ensuring a concise one-sentence summary.
         """
-        # Prepare the input text with a task prefix
+        if not chunk.strip():
+            return "No content to summarize."
+
         input_text = "summarize: " + chunk
-        inputs = self.tokenizer(input_text, return_tensors="pt", truncation=True, padding="longest",
-                                max_length=max_input_length)
+        inputs = self.tokenizer(
+            input_text,
+            return_tensors="pt",
+            truncation=True,
+            padding="longest",
+            max_length=max_input_length,
+        )
+        summary_ids = self.model.generate(
+            inputs["input_ids"],
+            max_length=max_summary_length,
+            min_length=30,
+            do_sample=False,
+            length_penalty=2.0,
+        )
+        summary_text = self.tokenizer.decode(summary_ids[0], skip_special_tokens=True).strip()
 
-        # Generate the summary with a more strict max length to ensure it's concise
-        summary_ids = self.model.generate(inputs["input_ids"], max_length=max_summary_length, min_length=30,
-                                          do_sample=False, length_penalty=2.0)
+        return summary_text.split(".")[0] + "." if "." in summary_text else summary_text
 
-        # Decode the summary and return it as text
-        summary_text = self.tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-
-        # Ensure summary is one sentence by trimming extra parts
-        # Here we assume that sentence-ending punctuation marks (.,!,?) will be used to define sentence boundaries
-        if '.' in summary_text:
-            summary_text = summary_text.split('.')[0] + '.'
-
-        return summary_text.strip()
-
-    def process_transcription_with_summary(self, transcript, timestamps, max_summary_length=50):
+    def process_transcription_with_summary(self, transcripts, timestamps=None, max_summary_length=50):
         """
-        Process the entire transcript and return summarized segments with timestamps, ensuring one-sentence summaries.
+        Generate summaries for each transcript segment and include timestamps.
+
+        Args:
+            transcripts (list): List of transcript segments.
+            timestamps (list): List of dictionaries with 'start_time' and 'end_time' in hours.
+            max_summary_length (int): Maximum length for each summary.
+
+        Returns:
+            list: List of dictionaries with start_time, end_time, and summary.
         """
-        processed_data = []
+        if timestamps is None:
+            timestamps = [{"start_time": 0, "end_time": len(transcripts)}]
 
-        # Split the transcript into smaller segments
-        segments = self.split_transcript(transcript)
+        if len(transcripts) != len(timestamps):
+            raise ValueError("The number of transcripts and timestamps must match.")
 
-        for start_time, end_time, segment in segments:
-            # Ensure the segment is a string before summarizing
-            if isinstance(segment, list):
-                segment = ' '.join(segment)
+        summaries = []
+        for transcript, timestamp in zip(transcripts, timestamps):
+            try:
+                start_time = timestamp.get("start_time", 0) * 3600  # Convert hours to seconds
+                end_time = timestamp.get("end_time", 0) * 3600  # Convert hours to seconds
+                summary_text = self.summarize_chunk(transcript, max_summary_length=max_summary_length)
+                summaries.append({
+                    "start_time": self.format_time(start_time),
+                    "end_time": self.format_time(end_time),
+                    "summary": summary_text,
+                })
+            except Exception as e:
+                summaries.append({
+                    "error": str(e),
+                })
 
-            # Summarize each segment with a short one-sentence summary
-            summary_text = self.summarize_chunk(segment, max_summary_length=max_summary_length)
+        return summaries
 
-            # Format the timestamps to HH:MM:SS
-            start_time_str = self.format_time(start_time)
-            end_time_str = self.format_time(end_time)
-
-            processed_data.append({
-                "timestamp": f"{start_time_str}-{end_time_str}",
-                "summary": summary_text
-            })
-
-        return processed_data
-
-    def format_time(self, seconds):
+    def summarize_entire_transcription(self, transcript, max_summary_length=150):
         """
-        Converts a time in seconds to HH:MM:SS format.
+        Summarize the entire transcription into a single concise summary.
         """
-        hours = int(seconds // 3600)
-        minutes = int((seconds % 3600) // 60)
-        seconds = int(seconds % 60)
-        return f"{hours:02}:{minutes:02}:{seconds:02}"
+        # If the input is a list of transcripts, join them into a single string
+        if isinstance(transcript, list):
+            transcript = " ".join(transcript)
+
+        if not transcript.strip():
+            return "No content to summarize."
+
+        input_text = "summarize: " + transcript
+        inputs = self.tokenizer(
+            input_text,
+            return_tensors="pt",
+            truncation=True,
+            padding="longest",
+            max_length=512,
+        )
+        summary_ids = self.model.generate(
+            inputs["input_ids"],
+            max_length=max_summary_length,
+            do_sample=False,
+            length_penalty=2.0,
+        )
+        return self.tokenizer.decode(summary_ids[0], skip_special_tokens=True).strip()
 
     def split_transcript(self, transcript, segment_duration=120, avg_words_per_minute=130):
         """
         Split transcript into smaller segments based on average words per minute.
-        """
-        # If the transcript is a list, join it into a single string
-        if isinstance(transcript, list):
-            transcript = ' '.join(transcript)
 
+        Args:
+            transcript (str): Full transcript text to split.
+            segment_duration (int): Duration of each segment in seconds.
+            avg_words_per_minute (int): Average words spoken per minute.
+
+        Returns:
+            list: List of segments with start/end times and text.
+        """
         words = transcript.split()
         words_per_segment = int(segment_duration * avg_words_per_minute / 60)
         segments = []
@@ -104,34 +141,33 @@ class SummarizationProcessor:
         for i in range(0, len(words), words_per_segment):
             start_time = (i // avg_words_per_minute) * 60
             end_time = ((i + words_per_segment) // avg_words_per_minute) * 60
-            segment = ' '.join(words[i:i + words_per_segment])
+            segment = " ".join(words[i:i + words_per_segment])
             segments.append((start_time, end_time, segment))
 
         return segments
 
-    def summarize_entire_transcription(self, transcript, max_summary_length=150):
+    def format_time(self, seconds):
         """
-        Summarize the entire transcription into a single concise summary.
+        Converts a time in seconds to HH:MM:SS format.
+
+        Args:
+            seconds (int): Time in seconds.
+
+        Returns:
+            str: Time formatted as HH:MM:SS.
         """
-        if isinstance(transcript, list):
-            transcript = ' '.join(transcript)
+        hours, remainder = divmod(seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}"
 
-        # Prepare the input text with a task prefix
-        input_text = "summarize: " + transcript
-        inputs = self.tokenizer(input_text, return_tensors="pt", truncation=True, padding="longest",
-                                max_length=512)  # T5 small has a 512 token input limit
-
-        # Generate the summary
-        summary_ids = self.model.generate(inputs["input_ids"], max_length=max_summary_length, do_sample=False,
-                                          length_penalty=2.0)
-
-        # Decode and return the summary
-        summary_text = self.tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-        return summary_text.strip()
     @staticmethod
     def save_to_json(data, filename="data.json"):
         """
         Save processed summary data to a JSON file.
+
+        Args:
+            data (dict): Data to save in JSON format.
+            filename (str): Filename to save the data.
         """
         with open(filename, "w") as f:
             json.dump(data, f, indent=4)
@@ -140,18 +176,23 @@ class SummarizationProcessor:
 class QnAProcessor:
     """Handles Q&A using the groq-api"""
 
-    def __init__(self, groq_api_key="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", model_name="llama3-groq-70b-8192-tool-use-preview"):
+    def __init__(self, groq_api_key=None, model_name="llama3-groq-70b-8192-tool-use-preview"):
+        """
+        Initialize the QnAProcessor.
+
+        Args:
+            groq_api_key (str): API key for accessing the Groq LLM.
+            model_name (str): Name of the Groq LLM model to use.
+        """
         self.groq_api_key = groq_api_key or os.environ.get("GROQ_API_KEY")
         if not self.groq_api_key:
-            raise ValueError(
-                "GROQ_API_KEY not found. Please provide it as an argument or set it as an environment variable.")
-            # Initialize the Groq LLM with the specified model and API key
+            raise ValueError("GROQ_API_KEY is required. Provide it as an argument or set it as an environment variable.")
+
         try:
             self.llm = ChatGroq(model=model_name, api_key=self.groq_api_key)
         except Exception as e:
             raise RuntimeError(f"Failed to initialize Groq LLM: {e}")
 
-        self.llm = ChatGroq(model="llama3-groq-70b-8192-tool-use-preview", api_key=self.groq_api_key)
         self.prompt = ChatPromptTemplate([
             SystemMessagePromptTemplate.from_template(
                 "You are an expert in the transcription extracted from the text. Answer the question according to the transcription."
@@ -162,7 +203,17 @@ class QnAProcessor:
         ])
 
     def ask_question(self, text, question):
+        """
+        Ask a question based on the given transcription text.
+
+        Args:
+            text (str): The transcription text to query.
+            question (str): The question to ask.
+
+        Returns:
+            str: The answer generated by the Groq LLM.
+        """
         search_input = Search(setup=text, question=question, answer="")
         response = self.llm({"setup": search_input.setup, "question": search_input.question})
-        search_input.answer = response.get("answer", "No answer found")
+        search_input.answer = response.get("answer", "No answer found.")
         return search_input.answer
