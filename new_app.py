@@ -89,7 +89,7 @@ def main():
     st.title("StreamScribe - Video Processing, Summarization, and Q&A")
 
     uploaded_file = st.file_uploader("Upload a video file", type=["mp4", "mov", "avi"])
-    vosk_model_path = "C:\\Users\\Galis\\Documents\\GitHub\\streamscribe\\vosk-model-small-en-us-0.15"
+    vosk_model_path = "C:\\Users\\Galis\\Documents\\GitHub\\streamscribe\\vosk-model-en-us-0.22"
 
     if uploaded_file:
         video_path = save_uploaded_file(uploaded_file)
@@ -109,14 +109,23 @@ def main():
                 if transcripts:
                     st.success("Transcription completed.")
 
+                    # Display the raw transcription before summarization
+                    st.subheader("Raw Transcription")
+                    for idx, transcript in enumerate(transcripts):
+                        st.write(f"Chunk {idx + 1}:")
+                        st.write(transcript)
+
                     # Summarize transcription with short summaries
                     summarizer = SummarizationProcessor()
-                    processed_data = summarizer.process_transcription_with_summary(transcripts, timestamps, max_summary_length=30)  # Set summary length to 30 tokens
+                    processed_data = summarizer.process_transcription_with_summary(transcripts, timestamps, max_summary_length=20)  # Set summary length to 30 tokens
                     st.json(processed_data)
 
-                    # Display summarized data with timestamps
-                    for item in processed_data:
-                        st.write(f"Timestamp: {item['timestamp']}, Summary: {item['summary']}")
+                    # Summarize the entire transcription
+                    st.subheader("Summary of Entire Transcription")
+                    overall_summary = summarizer.summarize_entire_transcription(
+                        transcripts, max_summary_length=150
+                    )
+                    st.write(overall_summary)
 
                     # Allow user to ask questions
                     question = st.text_input("Ask a question about the transcription:")

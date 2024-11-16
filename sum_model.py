@@ -3,7 +3,6 @@ import os
 import json
 import nltk
 from transformers import T5Tokenizer, T5ForConditionalGeneration
-from transformers import pipeline
 from langchain_groq import ChatGroq
 from langchain_core.prompts import (
     ChatPromptTemplate,
@@ -110,6 +109,25 @@ class SummarizationProcessor:
 
         return segments
 
+    def summarize_entire_transcription(self, transcript, max_summary_length=150):
+        """
+        Summarize the entire transcription into a single concise summary.
+        """
+        if isinstance(transcript, list):
+            transcript = ' '.join(transcript)
+
+        # Prepare the input text with a task prefix
+        input_text = "summarize: " + transcript
+        inputs = self.tokenizer(input_text, return_tensors="pt", truncation=True, padding="longest",
+                                max_length=512)  # T5 small has a 512 token input limit
+
+        # Generate the summary
+        summary_ids = self.model.generate(inputs["input_ids"], max_length=max_summary_length, do_sample=False,
+                                          length_penalty=2.0)
+
+        # Decode and return the summary
+        summary_text = self.tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+        return summary_text.strip()
     @staticmethod
     def save_to_json(data, filename="data.json"):
         """
@@ -122,11 +140,17 @@ class SummarizationProcessor:
 class QnAProcessor:
     """Handles Q&A using the groq-api"""
 
-    def __init__(self, groq_api_key="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"):
+    def __init__(self, groq_api_key="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", model_name="llama3-groq-70b-8192-tool-use-preview"):
         self.groq_api_key = groq_api_key or os.environ.get("GROQ_API_KEY")
         if not self.groq_api_key:
             raise ValueError(
                 "GROQ_API_KEY not found. Please provide it as an argument or set it as an environment variable.")
+            # Initialize the Groq LLM with the specified model and API key
+        try:
+            self.llm = ChatGroq(model=model_name, api_key=self.groq_api_key)
+        except Exception as e:
+            raise RuntimeError(f"Failed to initialize Groq LLM: {e}")
+
         self.llm = ChatGroq(model="llama3-groq-70b-8192-tool-use-preview", api_key=self.groq_api_key)
         self.prompt = ChatPromptTemplate([
             SystemMessagePromptTemplate.from_template(
