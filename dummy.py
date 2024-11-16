@@ -86,12 +86,17 @@ def set_custom_css():
 def main():
     st.set_page_config(page_title="StreamScribe", page_icon="🎥",  initial_sidebar_state="collapsed")#layout="wide",
     #set_custom_css()
+#################################################
+    col1, col2, col3 = st.columns(3)
+    with col2:
+        st.image(r"C:\Users\matar.aviv\Desktop\DS17\final project\StreamScribe2.png", width=400)
+        #st.title("Video Helper")
     with st.sidebar:
-        #st.image(r"C:\Users\matar.aviv\Desktop\DS17\final project\LOGOOO.png", width=200)
+        st.image(r"C:\Users\matar.aviv\Desktop\DS17\final project\StreamScribe flat2.png", width=200)
         st.title("StreamScribe")
         st.write("Video Analysis Tool")
-    st.title("StreamScribe - Video Helper")
-
+    #st.title("StreamScribe - Video Helper")
+#################################################
 
     # Create a placeholder for the file uploader
     file_uploader_placeholder = st.empty()
