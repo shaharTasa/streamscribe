@@ -1,0 +1,509 @@
+{
+  "full_text": " In the coming years, artificial intelligence is probably going to change your life, and likely the entire world. But people have a hard time agreeing on exactly how. The following are excerpts from a world economic forum interview where renowned computer science professor and AI expert Stuart Russell help separate the sense from the nonsense. There's a big difference between asking a human to do something and giving that as the objective to an AI system. When you ask a human to fetch you a cup of coffee, you don't mean this should be their life's mission and nothing else in the universe matters. Even if they have to kill everybody else in Starbucks to get you the coffee before it closes, they should do that. No, that's not what you mean. You mean all the other things that we mutually care about, they should factor into your behavior as well. And the way we build AI systems now is we give them a fixed objective. The algorithms require us to specify everything in the objective. If you say, you know, we fix the acidification of the oceans, yeah, you could have a catalytic reaction that does that extremely efficiently, but it consumes the cordial of the oxygen in the atmosphere, which would apparently cause us to die fairly slowly and unpleasantly, because of course it's several hours. So how do we avoid this problem? You might say, okay, well, just be more careful about specifying the objective, right? Don't forget the atmospheric oxygen. And then of course, some side effect of the reaction in the ocean, poison's all the fish. Okay, well I meant don't kill the fish either. And then, well, what about the seaweed? Okay, don't do anything that's going to cause all the seaweed to die. And all in all in all, right? And the reason that we don't have to do that with humans is that humans often know that they don't know all the things that we care about. If you ask a human to get your cup coffee, you know, and you happen to be in the hotel of your sank in Paris where the coffee is, I think, 13 euros a cup. It's entirely reasonable to come back and say, well, it's 13 euros, are you sure you've won't or I could go next door and you'll get one? And it's a perfectly normal thing for a person to do, right? You ask, you know, I'm going to repaint your house. Is it okay if I take off the drain pipes and then put them back? We don't think of this as a terribly sophisticated capability, but AI systems don't have it, because the way we build them now, they have to know these four objectives. If we build systems that know that they don't know what the objective is, then they start to exhibit these behaviors, like asking permission before getting rid of all the obscenity out in the air. In all these sensors, control over the AI system comes from the machines uncertainty about what the true objective is. It's when you build machines that believe with certainty that they have the objectives. That's when you get the sort of psychopathic behavior, and I think you see the same thing in humans. What happens when General Purpose AI hits the real economy? How do things change? Can we adapt? This is a very old point. Amazingly, Aristotle actually has a passage where he says, look, if we had fully automated weaving machines and lecturers that could pluck a mire and use music without any humans, then we wouldn't need any work. That idea, which I think it was came to call it technological unemployment in 1930, is very obvious to people, right? They think, yeah, of course, if the machine does the work, then I'm going to be unemployed. If you think about the warehouses, the companies that currently operate for e-commerce, they are half automated. The way it works is that on old warehouses where you've got tons of stuff piled up all over the place, and humans go and rummage around and then bring it back and send it off. There's a robot who goes and gets the shelving unit that contains the thing that you need, but the human has to pick the object out of the bin or the off the shelf because that's still too difficult. But at the same time, would you make a robot that is accurate enough to be able to pick pretty much any object with almost a very wide variety of objects that you can buy? That would, at a stroke, eliminate three or four million jobs. There's an interesting story that EM Forster wrote where everyone is entirely machine dependent. The story is really about the fact that if you hand over the management of your civilization to machines, you then lose the incentive to understand it yourself or to teach the next generation how to understand it. And you can see, Wally, actually, as a modern version where everyone is in feeble and infantilized by machine, and that hasn't been possible up to now, right? We put a lot of our civilization into books, but the books can't run it for us, and so we always have to teach the next generation. If you work it out, it's about a trillion-person years of teaching and learning and an unbroken chain that goes back tens of thousands of generations. What happens if that chain breaks? And I think that's something we have to understand as AI needs forward. The actual date of arrival of General Purpose AI, you're not going to be able to pinpoint it, right? It isn't a single day. It's also not the case. It's all or nothing. The impact is going to be increasing. So with every advance in AI, it significantly expands the range of tasks. So in that sense, I think most experts say by the end of the century, we're very, very likely to have General Purpose AI. The medium is something around 2045. I'm a little more on the conservative side. I think the problem is harder than we think. I like what John McCarthy, he was one of the founders of AI. Well, he was asked this question. He said, well, somewhere between five and 500 years, and we're going to need, I think, several Einstein's to make it happen. But how will the economy change in the meantime? Will it be able to keep growing? Watch this video to hear economist Kate Rayworth explain why growth is not always a good thing, or continue to expand your understanding of economics on the World Economic Forum's YouTube channel.",
+  "overall_summary": " AI expert Stuart Russell: There's a big difference between asking a human to do something and giving that as the objective to an AI system. Russell: All the other things that we mutually care about, they should factor into your behavior.",
+  "segments": [
+    {
+      "text": "In the coming years, artificial intelligence is probably going to change your life, and",
+      "start": "0:00:00",
+      "end": "0:00:11"
+    },
+    {
+      "text": "likely the entire world.",
+      "start": "0:00:11",
+      "end": "0:00:12"
+    },
+    {
+      "text": "But people have a hard time agreeing on exactly how.",
+      "start": "0:00:12",
+      "end": "0:00:15"
+    },
+    {
+      "text": "The following are excerpts from a world economic forum interview where renowned computer science",
+      "start": "0:00:15",
+      "end": "0:00:20"
+    },
+    {
+      "text": "professor and AI expert Stuart Russell help separate the sense from the nonsense.",
+      "start": "0:00:20",
+      "end": "0:00:25"
+    },
+    {
+      "text": "There's a big difference between asking a human to do something and giving that as the",
+      "start": "0:00:25",
+      "end": "0:00:30"
+    },
+    {
+      "text": "objective to an AI system.",
+      "start": "0:00:30",
+      "end": "0:00:32"
+    },
+    {
+      "text": "When you ask a human to fetch you a cup of coffee, you don't mean this should be their",
+      "start": "0:00:32",
+      "end": "0:00:37"
+    },
+    {
+      "text": "life's mission and nothing else in the universe matters.",
+      "start": "0:00:37",
+      "end": "0:00:39"
+    },
+    {
+      "text": "Even if they have to kill everybody else in Starbucks to get you the coffee before it closes,",
+      "start": "0:00:39",
+      "end": "0:00:44"
+    },
+    {
+      "text": "they should do that.",
+      "start": "0:00:44",
+      "end": "0:00:45"
+    },
+    {
+      "text": "No, that's not what you mean.",
+      "start": "0:00:45",
+      "end": "0:00:46"
+    },
+    {
+      "text": "You mean all the other things that we mutually care about, they should factor into your behavior",
+      "start": "0:00:46",
+      "end": "0:00:50"
+    },
+    {
+      "text": "as well.",
+      "start": "0:00:50",
+      "end": "0:00:51"
+    },
+    {
+      "text": "And the way we build AI systems now is we give them a fixed objective.",
+      "start": "0:00:51",
+      "end": "0:00:55"
+    },
+    {
+      "text": "The algorithms require us to specify everything in the objective.",
+      "start": "0:00:55",
+      "end": "0:00:59"
+    },
+    {
+      "text": "If you say, you know, we fix the acidification of the oceans, yeah, you could have a catalytic",
+      "start": "0:00:59",
+      "end": "0:01:04"
+    },
+    {
+      "text": "reaction that does that extremely efficiently, but it consumes the cordial of the oxygen",
+      "start": "0:01:04",
+      "end": "0:01:09"
+    },
+    {
+      "text": "in the atmosphere, which would apparently cause us to die fairly slowly and unpleasantly,",
+      "start": "0:01:09",
+      "end": "0:01:14"
+    },
+    {
+      "text": "because of course it's several hours.",
+      "start": "0:01:14",
+      "end": "0:01:16"
+    },
+    {
+      "text": "So how do we avoid this problem?",
+      "start": "0:01:16",
+      "end": "0:01:19"
+    },
+    {
+      "text": "You might say, okay, well, just be more careful about specifying the objective, right?",
+      "start": "0:01:19",
+      "end": "0:01:23"
+    },
+    {
+      "text": "Don't forget the atmospheric oxygen.",
+      "start": "0:01:23",
+      "end": "0:01:25"
+    },
+    {
+      "text": "And then of course, some side effect of the reaction in the ocean, poison's all the fish.",
+      "start": "0:01:25",
+      "end": "0:01:30"
+    },
+    {
+      "text": "Okay, well I meant don't kill the fish either.",
+      "start": "0:01:30",
+      "end": "0:01:33"
+    },
+    {
+      "text": "And then, well, what about the seaweed?",
+      "start": "0:01:33",
+      "end": "0:01:34"
+    },
+    {
+      "text": "Okay, don't do anything that's going to cause all the seaweed to die.",
+      "start": "0:01:34",
+      "end": "0:01:38"
+    },
+    {
+      "text": "And all in all in all, right?",
+      "start": "0:01:38",
+      "end": "0:01:40"
+    },
+    {
+      "text": "And the reason that we don't have to do that with humans is that humans often know that",
+      "start": "0:01:40",
+      "end": "0:01:45"
+    },
+    {
+      "text": "they don't know all the things that we care about.",
+      "start": "0:01:45",
+      "end": "0:01:48"
+    },
+    {
+      "text": "If you ask a human to get your cup coffee, you know, and you happen to be in the hotel",
+      "start": "0:01:48",
+      "end": "0:01:53"
+    },
+    {
+      "text": "of your sank in Paris where the coffee is, I think, 13 euros a cup.",
+      "start": "0:01:53",
+      "end": "0:01:56"
+    },
+    {
+      "text": "It's entirely reasonable to come back and say, well, it's 13 euros, are you sure you've",
+      "start": "0:01:56",
+      "end": "0:02:01"
+    },
+    {
+      "text": "won't or I could go next door and you'll get one?",
+      "start": "0:02:01",
+      "end": "0:02:03"
+    },
+    {
+      "text": "And it's a perfectly normal thing for a person to do, right?",
+      "start": "0:02:03",
+      "end": "0:02:06"
+    },
+    {
+      "text": "You ask, you know, I'm going to repaint your house.",
+      "start": "0:02:06",
+      "end": "0:02:10"
+    },
+    {
+      "text": "Is it okay if I take off the drain pipes and then put them back?",
+      "start": "0:02:10",
+      "end": "0:02:13"
+    },
+    {
+      "text": "We don't think of this as a terribly sophisticated capability, but AI systems don't have it,",
+      "start": "0:02:13",
+      "end": "0:02:18"
+    },
+    {
+      "text": "because the way we build them now, they have to know these four objectives.",
+      "start": "0:02:18",
+      "end": "0:02:22"
+    },
+    {
+      "text": "If we build systems that know that they don't know what the objective is, then they start",
+      "start": "0:02:22",
+      "end": "0:02:26"
+    },
+    {
+      "text": "to exhibit these behaviors, like asking permission before getting rid of all the obscenity",
+      "start": "0:02:26",
+      "end": "0:02:31"
+    },
+    {
+      "text": "out in the air.",
+      "start": "0:02:31",
+      "end": "0:02:32"
+    },
+    {
+      "text": "In all these sensors, control over the AI system comes from the machines uncertainty about",
+      "start": "0:02:32",
+      "end": "0:02:39"
+    },
+    {
+      "text": "what the true objective is.",
+      "start": "0:02:39",
+      "end": "0:02:41"
+    },
+    {
+      "text": "It's when you build machines that believe with certainty that they have the objectives.",
+      "start": "0:02:41",
+      "end": "0:02:46"
+    },
+    {
+      "text": "That's when you get the sort of psychopathic behavior, and I think you see the same thing",
+      "start": "0:02:46",
+      "end": "0:02:49"
+    },
+    {
+      "text": "in humans.",
+      "start": "0:02:49",
+      "end": "0:02:51"
+    },
+    {
+      "text": "What happens when General Purpose AI hits the real economy?",
+      "start": "0:02:51",
+      "end": "0:02:55"
+    },
+    {
+      "text": "How do things change?",
+      "start": "0:02:55",
+      "end": "0:02:57"
+    },
+    {
+      "text": "Can we adapt?",
+      "start": "0:02:57",
+      "end": "0:02:59"
+    },
+    {
+      "text": "This is a very old point.",
+      "start": "0:02:59",
+      "end": "0:03:01"
+    },
+    {
+      "text": "Amazingly, Aristotle actually has a passage where he says, look, if we had fully automated",
+      "start": "0:03:01",
+      "end": "0:03:06"
+    },
+    {
+      "text": "weaving machines and lecturers that could pluck a mire and use music without any humans,",
+      "start": "0:03:06",
+      "end": "0:03:12"
+    },
+    {
+      "text": "then we wouldn't need any work.",
+      "start": "0:03:12",
+      "end": "0:03:14"
+    },
+    {
+      "text": "That idea, which I think it was came to call it technological unemployment in 1930, is",
+      "start": "0:03:14",
+      "end": "0:03:19"
+    },
+    {
+      "text": "very obvious to people, right?",
+      "start": "0:03:19",
+      "end": "0:03:21"
+    },
+    {
+      "text": "They think, yeah, of course, if the machine does the work, then I'm going to be unemployed.",
+      "start": "0:03:21",
+      "end": "0:03:26"
+    },
+    {
+      "text": "If you think about the warehouses, the companies that currently operate for e-commerce, they",
+      "start": "0:03:26",
+      "end": "0:03:31"
+    },
+    {
+      "text": "are half automated.",
+      "start": "0:03:31",
+      "end": "0:03:33"
+    },
+    {
+      "text": "The way it works is that on old warehouses where you've got tons of stuff piled up all over",
+      "start": "0:03:33",
+      "end": "0:03:37"
+    },
+    {
+      "text": "the place, and humans go and rummage around and then bring it back and send it off.",
+      "start": "0:03:37",
+      "end": "0:03:41"
+    },
+    {
+      "text": "There's a robot who goes and gets the shelving unit that contains the thing that you need,",
+      "start": "0:03:41",
+      "end": "0:03:46"
+    },
+    {
+      "text": "but the human has to pick the object out of the bin or the off the shelf because that's",
+      "start": "0:03:46",
+      "end": "0:03:50"
+    },
+    {
+      "text": "still too difficult.",
+      "start": "0:03:50",
+      "end": "0:03:52"
+    },
+    {
+      "text": "But at the same time, would you make a robot that is accurate enough to be able to pick",
+      "start": "0:03:52",
+      "end": "0:03:58"
+    },
+    {
+      "text": "pretty much any object with almost a very wide variety of objects that you can buy?",
+      "start": "0:03:58",
+      "end": "0:04:02"
+    },
+    {
+      "text": "That would, at a stroke, eliminate three or four million jobs.",
+      "start": "0:04:02",
+      "end": "0:04:06"
+    },
+    {
+      "text": "There's an interesting story that EM Forster wrote where everyone is entirely machine dependent.",
+      "start": "0:04:06",
+      "end": "0:04:13"
+    },
+    {
+      "text": "The story is really about the fact that if you hand over the management of your civilization",
+      "start": "0:04:13",
+      "end": "0:04:19"
+    },
+    {
+      "text": "to machines, you then lose the incentive to understand it yourself or to teach the next",
+      "start": "0:04:19",
+      "end": "0:04:24"
+    },
+    {
+      "text": "generation how to understand it.",
+      "start": "0:04:24",
+      "end": "0:04:26"
+    },
+    {
+      "text": "And you can see, Wally, actually, as a modern version where everyone is in feeble and",
+      "start": "0:04:26",
+      "end": "0:04:31"
+    },
+    {
+      "text": "infantilized by machine, and that hasn't been possible up to now, right?",
+      "start": "0:04:31",
+      "end": "0:04:35"
+    },
+    {
+      "text": "We put a lot of our civilization into books, but the books can't run it for us, and so",
+      "start": "0:04:35",
+      "end": "0:04:39"
+    },
+    {
+      "text": "we always have to teach the next generation.",
+      "start": "0:04:39",
+      "end": "0:04:41"
+    },
+    {
+      "text": "If you work it out, it's about a trillion-person years of teaching and learning and an unbroken",
+      "start": "0:04:41",
+      "end": "0:04:46"
+    },
+    {
+      "text": "chain that goes back tens of thousands of generations.",
+      "start": "0:04:46",
+      "end": "0:04:50"
+    },
+    {
+      "text": "What happens if that chain breaks?",
+      "start": "0:04:50",
+      "end": "0:04:51"
+    },
+    {
+      "text": "And I think that's something we have to understand as AI needs forward.",
+      "start": "0:04:51",
+      "end": "0:04:55"
+    },
+    {
+      "text": "The actual date of arrival of General Purpose AI, you're not going to be able to pinpoint",
+      "start": "0:04:55",
+      "end": "0:05:00"
+    },
+    {
+      "text": "it, right?",
+      "start": "0:05:00",
+      "end": "0:05:01"
+    },
+    {
+      "text": "It isn't a single day.",
+      "start": "0:05:01",
+      "end": "0:05:02"
+    },
+    {
+      "text": "It's also not the case.",
+      "start": "0:05:02",
+      "end": "0:05:03"
+    },
+    {
+      "text": "It's all or nothing.",
+      "start": "0:05:03",
+      "end": "0:05:04"
+    },
+    {
+      "text": "The impact is going to be increasing.",
+      "start": "0:05:04",
+      "end": "0:05:07"
+    },
+    {
+      "text": "So with every advance in AI, it significantly expands the range of tasks.",
+      "start": "0:05:07",
+      "end": "0:05:12"
+    },
+    {
+      "text": "So in that sense, I think most experts say by the end of the century, we're very, very",
+      "start": "0:05:12",
+      "end": "0:05:18"
+    },
+    {
+      "text": "likely to have General Purpose AI.",
+      "start": "0:05:18",
+      "end": "0:05:21"
+    },
+    {
+      "text": "The medium is something around 2045.",
+      "start": "0:05:21",
+      "end": "0:05:24"
+    },
+    {
+      "text": "I'm a little more on the conservative side.",
+      "start": "0:05:24",
+      "end": "0:05:26"
+    },
+    {
+      "text": "I think the problem is harder than we think.",
+      "start": "0:05:26",
+      "end": "0:05:28"
+    },
+    {
+      "text": "I like what John McCarthy, he was one of the founders of AI.",
+      "start": "0:05:28",
+      "end": "0:05:31"
+    },
+    {
+      "text": "Well, he was asked this question.",
+      "start": "0:05:31",
+      "end": "0:05:33"
+    },
+    {
+      "text": "He said, well, somewhere between five and 500 years, and we're going to need, I think,",
+      "start": "0:05:33",
+      "end": "0:05:36"
+    },
+    {
+      "text": "several Einstein's to make it happen.",
+      "start": "0:05:36",
+      "end": "0:05:40"
+    },
+    {
+      "text": "But how will the economy change in the meantime?",
+      "start": "0:05:40",
+      "end": "0:05:42"
+    },
+    {
+      "text": "Will it be able to keep growing?",
+      "start": "0:05:42",
+      "end": "0:05:44"
+    },
+    {
+      "text": "Watch this video to hear economist Kate Rayworth explain why growth is not always a good thing,",
+      "start": "0:05:44",
+      "end": "0:05:50"
+    },
+    {
+      "text": "or continue to expand your understanding of economics on the World Economic Forum's",
+      "start": "0:05:50",
+      "end": "0:05:53"
+    },
+    {
+      "text": "YouTube channel.",
+      "start": "0:05:53",
+      "end": "0:05:54"
+    }
+  ],
+  "timestamps": [],
+  "qa_cache": {},
+  "processed_date": "2024-11-16T17:24:53.375094"
+}

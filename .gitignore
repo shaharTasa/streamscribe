@@ -1,2 +1,11 @@
 *.mp4
 *.wav
+*.env
+__pycache__/
+env/
+ENV/
+.env
+.venv
+.python-version
+.ipynb_checkpoints
+*.ipynb
