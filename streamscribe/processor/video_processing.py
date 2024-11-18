@@ -13,7 +13,9 @@ import logging
 import subprocess
 from typing import Optional, Dict, List, Union
 import soundfile as sf
-
+import ffmpeg
+import logging
+from pathlib import Path
 logger = logging.getLogger(__name__)
 
 @dataclass
@@ -220,3 +222,38 @@ class VideoProcessor:
                 "3. Add C:\\ffmpeg\\bin to your system PATH\n"
                 f"Current PATH: {os.environ['PATH']}"
             )
+            
+
+
+    def get_duration(self, file_path: Path) -> float:
+        """Get the duration of a video file in seconds."""
+        try:
+            # Get video information using ffmpeg
+            probe = ffmpeg.probe(str(file_path))
+            
+            # Extract duration from video information
+            duration = float(probe['streams'][0]['duration'])
+            
+            return duration
+            
+        except Exception as e:
+            logger.error(f"Failed to get video duration: {e}")
+            return 0.0  # Return 0 if duration cannot be determined
+
+    def _estimate_processing_time(self, duration: float) -> float:
+        """Estimate processing time based on video duration."""
+        # Rough estimation: processing takes about 20% of video duration
+        # with a minimum of 30 seconds
+        return max(30, duration * 0.2)
+
+    def get_friendly_duration(self, seconds: float) -> str:
+        """Convert duration in seconds to a friendly string format."""
+        minutes = int(seconds // 60)
+        remaining_seconds = int(seconds % 60)
+        
+        if minutes == 0:
+            return f"{remaining_seconds} seconds"
+        elif minutes == 1:
+            return "1 minute" if remaining_seconds == 0 else f"1 minute and {remaining_seconds} seconds"
+        else:
+            return f"{minutes} minutes" if remaining_seconds == 0 else f"{minutes} minutes and {remaining_seconds} seconds"
