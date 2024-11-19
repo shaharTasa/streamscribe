@@ -265,7 +265,7 @@ def main():
 
             if hasattr(st.session_state, 'processed_content'):
                 tab1, tab2, tab3 = st.tabs([
-                    "❓ Q&A"
+                    "❓ Q&A",
                     "📝 Summary",
                     "🎯 Topics",
                 ])
