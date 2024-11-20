@@ -15,13 +15,32 @@ import streamlit as st
 import pandas as pd
 from datetime import timedelta
 from streamscribe.processor.video_processing import VideoProcessor
+from dotenv import load_dotenv
 
 # Ensure nltk punkt tokenizer is available
 nltk.download('punkt', quiet=True)
 
+load_dotenv()
+
+groq_api_key = os.getenv('GROQ_API_KEY')
+
+if groq_api_key:
+    st.success("GROQ_API_KEY is successfully loaded.")
+else:
+    st.error("GROQ_API_KEY is not set.")
+
+
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,  # Set to DEBUG for more detailed logs
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
+
 logger = logging.getLogger(__name__)
-
-
 
 @dataclass
 class ProcessedVideo:

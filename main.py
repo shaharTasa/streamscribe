@@ -21,8 +21,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Load environment variables
-load_dotenv()
 
+load_dotenv()
 
 def download_youtube_video(url: str, temp_dir: str) -> str:
     """Download YouTube video using yt-dlp with hidden progress output"""
