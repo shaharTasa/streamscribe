@@ -253,9 +253,9 @@ class StreamScribeBackend:
             processed_segments = []
             for seg in segments:
                 processed_segments.append({
-                    'text': seg['text'],
                     'start_time': seg['start'],
-                    'end_time': seg['end']
+                    'end_time': seg['end'],
+                    'text': seg['text'],
                 })
 
             # Generate overall summary
@@ -270,7 +270,7 @@ class StreamScribeBackend:
             return ProcessedVideo(
                 full_text=transcription['text'],
                 overall_summary=overall_summary,
-                segments=[],  # Update if you have segment processing
+                segments=processed_segments,  # Update if you have segment processing
                 topics=topics
             )
 

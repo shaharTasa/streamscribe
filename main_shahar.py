@@ -265,19 +265,19 @@ def main():
 
             if hasattr(st.session_state, 'processed_content'):
                 tab1, tab2, tab3 = st.tabs([
+                    "❓ Q&A",
                     "📝 Summary",
                     "🎯 Topics",
-                    "❓ Q&A"
                 ])
 
-                with tab1:
+                with tab2:
                     st.write("### Video Summary")
                     st.text_area("", st.session_state.processed_content.overall_summary, height=200)
 
                     with st.expander("Show full transcript"):
                         st.text_area("Full Transcript", st.session_state.processed_content.full_text, height=300)
 
-                with tab2:
+                with tab3:
                     st.write("### Main Topics Covered")
 
                     if not st.session_state.processed_content.topics:
@@ -293,7 +293,7 @@ def main():
                                     for point in topic['key_points']:
                                         st.markdown(f"- {point}")
 
-                with tab3:
+                with tab1:
                     st.write("## 🔍 Ask Questions About the Video")
 
                     # User's Question Section

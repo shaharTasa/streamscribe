@@ -246,19 +246,31 @@ def main():
 
             if hasattr(st.session_state, 'processed_content'):
                 tab1, tab2, tab3 = st.tabs([
+                    "❓ Q&A",
                     "📝 Summary",
-                    "🎯 Topics",
-                    "❓ Q&A"
+                    "🎯 Topics"
+
                 ])
 
-                with tab1:
+                with tab2:
                     st.write("### Video Summary")
                     st.text_area("", st.session_state.processed_content.overall_summary, height=200)
 
-                    with st.expander("Show full transcript"):
-                        st.text_area("Full Transcript", st.session_state.processed_content.full_text, height=300)
+                    df = pd.DataFrame(st.session_state.processed_content.segments)
+                    start, end = st.columns(2)
 
-                with tab2:
+                    with start:
+                        start_time = st.selectbox('Start Time', df['start_time'].unique())
+
+                    with end:
+                        end_time = st.selectbox('End Time', df['end_time'].unique(),
+                                                index=len(df['end_time'].unique()) - 1)
+
+                    # Apply the filters
+                    filtered_df = df[(df['start_time'] >= start_time) & (df['end_time'] <= end_time)]
+                    st.dataframe(filtered_df, use_container_width=True)
+
+                with tab3:
                     st.write("### Main Topics Covered")
 
                     if not st.session_state.processed_content.topics:
@@ -274,23 +286,50 @@ def main():
                                     for point in topic['key_points']:
                                         st.markdown(f"- {point}")
 
-                with tab3:
-                    st.write("### 🔍 Ask Questions About the Video")
-                    question = st.text_input("", placeholder="Ask anything about the video content...")
-                    include_quotes = st.checkbox("Include quotes from the video")
+                with tab1:
+                    st.write("## 🔍 Ask Questions About the Video")
 
-                    if question:
-                        with st.spinner("Finding answer..."):
-                            result = st.session_state.backend.ask_question(
-                                st.session_state.processed_content,
-                                question,
-                                include_quotes
-                            )
+                    # User's Question Section
+                    st.markdown("### Your Question")
 
-                            st.markdown("### Answer:")
-                            st.write(result['answer'])
+                    # Initialize session state variables if they don't exist
+                    if 'user_question' not in st.session_state:
+                        st.session_state['user_question'] = ''
+                    if 'answer' not in st.session_state:
+                        st.session_state['answer'] = ''
 
-                    st.write("### Suggested Questions")
+                    # Create a form to handle the question input and submission
+                    with st.form(key='question_form'):
+                        question = st.text_input(
+                            "Type your question here:",
+                            value=st.session_state['user_question'],
+                            key='question_input'
+                        )
+                        # Add a submit button to the form
+                        submit_button = st.form_submit_button("Get Answer")
+
+                        if submit_button:
+                            if question.strip():
+                                st.session_state['user_question'] = question  # Store the question in session state
+                                with st.spinner("Finding answer..."):
+                                    result = st.session_state.backend.ask_question(
+                                        st.session_state.processed_content,
+                                        question,
+                                        include_quotes=True  # Always include quotes and timestamps
+                                    )
+                                    st.session_state['answer'] = result['answer']  # Store the answer in session state
+                            else:
+                                st.warning("Please enter a question.")
+
+                    # Display the answer if available
+                    if st.session_state['answer']:
+                        st.markdown("### Answer:")
+                        st.write(st.session_state['answer'])
+
+                    # Separator
+                    st.markdown("---")
+
+                    st.write("## 💡 Suggested Questions")
                     if 'suggested_questions' not in st.session_state:
                         with st.spinner("Generating suggested questions..."):
                             questions = st.session_state.backend.qa_processor.suggest_questions(
@@ -301,20 +340,20 @@ def main():
 
                     # Display questions organized by type
                     for q_type, questions in st.session_state.suggested_questions.items():
-                        st.markdown(f"#### {q_type}")  # Type as a header
+                        st.markdown(f"### {q_type}")  # Type as a header
                         for i, question in enumerate(questions, 1):
                             with st.expander(f"{i}. {question}"):
-                                # if st.button("Get Answer", key=f"suggest_{hash(question)}"):
                                 with st.spinner("Finding answer..."):
                                     result = st.session_state.backend.ask_question(
                                         st.session_state.processed_content,
-                                        question
+                                        question,
+                                        include_quotes=True  # Always include quotes and timestamps
                                     )
                                     st.markdown("**Answer:**")
                                     st.write(result['answer'])
 
-        else:
-            st.warning("Please upload a video file or provide a YouTube URL.")
+            else:
+                st.warning("Please upload a video file or provide a YouTube URL.")
 
     except Exception as e:
         st.error("An error occurred during processing")
