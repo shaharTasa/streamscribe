@@ -14,6 +14,11 @@ from pathlib import Path
 # if os.path.exists(ffmpeg_path):
 #     os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
 
+
+ffmpeg_path = r"C:\ffmpeg-master-latest-win64-gpl\bin"
+if os.path.exists(ffmpeg_path):
+    os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
