@@ -64,7 +64,7 @@ if os.path.exists(ffmpeg_path):
 1. Run the Online App in this Link:
 
 ### Or
-2. Run the Streamlit App:
+2. Run the Streamlit App: https://streamscribe.streamlit.app/
 Start the application by running the following command in your terminal:
 ```bash
 streamlit run main.py
