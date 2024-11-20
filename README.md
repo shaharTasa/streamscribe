@@ -1,66 +1,96 @@
-# StreamScribe - Video Analysis Tool
+# StreamScribe 🎥
 
-StreamScribe is a powerful Streamlit-based application that provides comprehensive video analysis capabilities. It allows users to upload video files, process them, and extract valuable insights through transcription, summarization, and interactive Q&A.
+## Overview
+StreamScribe is an advanced video analysis tool that leverages AI to provide comprehensive insights from video content. The application supports video uploads and YouTube URL processing, offering features like transcription, summarization, topic analysis, and interactive Q&A.
 
-## Features
+## Features 🌟
+- **Video Upload or YouTube URL Support**  
+  Upload videos or provide a YouTube link for processing.
+  
+- **Summarization**  
+  Extract meaningful summaries and segment-based details from the video.
 
-- Video upload and processing
-- Full transcript generation
-- Video summarization
-- Subject breakdown of video content
-- Interactive Q&A based on video content
-- User-friendly interface with progress indicators
+- **Interactive Q&A**  
+  Ask questions about the video content and get precise answers with quotes and timestamps.
 
-## Prerequisites
+- **Main Topic Analysis**  
+  Identify and explore key topics covered in the video.
 
+- **Suggested Questions**  
+  Receive auto-generated questions based on the video’s content.
+
+
+## Prerequisites 🛠
+
+### System Requirements
 - Python 3.7+
-- FFmpeg (ensure it's installed and added to your system PATH)
+- FFmpeg
+- Stable internet connection
 
-## Installation
+### Required Dependencies
+- streamlit
+- pandas
+- yt-dlp
+- python-dotenv
+- pathlib
 
-1. Clone this repository:
-?????????????????
-2. Install the required packages:
-?????????????????
+## Installation 
+
+1. Clone the repository:
+```bash
+git clone https://github.com/shaharTasa/streamscribe.git
+cd streamscribe
+```
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 3. Set up environment variables:
-Create a `.env` file in the root directory and add your GROQ API key:
+- Create a .env file in the project root directory
+- Add your GROQ API key to the .env file:
+```GROQ_API_KEY=your_groq_api_key_here```
 
-## Usage
+4. Install FFmpeg:
+- Download FFmpeg from the official website
+- Add the FFmpeg bin directory to your system's PATH
+- Alternatively, you can specify the FFmpeg path in the code:
+```bash
+ffmpeg_path = r"path\to\ffmpeg\bin"
+if os.path.exists(ffmpeg_path):
+    os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
+```
+## Usage 
 
-1. Run the Streamlit app:
-?????????????????
-2. Open your web browser and navigate to the URL provided by Streamlit (usually `http://localhost:8501`).
+1. Run the Online App in this Link:???????????????????????
+https://www.youtube.com/watch?v=ed4XYtWZqgQ&ab_channel=%D7%A2%D7%99%D7%93%D7%9F%D7%A2%D7%9E%D7%93%D7%99IdanAmedi
+### Or
+2. Run the Streamlit App:
+Start the application by running the following command in your terminal:
+```bash
+streamlit run main.py
+```
+2. Processing Steps
+   1. Choose Input Method
+      - Select "Upload Video" or "YouTube URL"
+   2. Video Upload
+      - Click file uploader for local videos
+      - Enter YouTube link for online videos
+   3. Processing
+      - Wait for video download (YouTube) or upload (local)
+      - Observe processing progress via spinner
 
-3. Upload a video file (supported formats: mp4, mov, avi).
+    
+3. Analysis Exploration
+- **Q&A Tab**: Ask questions about video content
+- **Summary Tab**: View overall summary and filter segments
+- **Topics Tab**: Explore main topics and key points
 
-4. Wait for the video to be processed. You'll see a progress bar indicating the processing status.
+4. Additional Features
+- **Suggested Questions**: Auto-generated for quick insights
+- **Full Transcript**: Available in expandable section
 
-5. Once processing is complete, you can:
-- View the full transcript
-- Read a summary of the video
-- Explore the subject breakdown
-- Ask questions about the video content in the Q&A section
+## License
+This project is licensed under the MIT License.
 
-## Configuration
-
-- The FFmpeg path is set to `C:\ffmpeg-master-latest-win64-gpl\bin`. Adjust this path in the code if your FFmpeg installation is located elsewhere.
-- Logging is configured to INFO level. Modify the logging configuration in the code if needed.
-
-## Customization
-
-- You can adjust the appearance of the app by modifying the Streamlit components and layout in the `main()` function.
-- The `StreamScribeBackend` class can be extended or modified to add more processing capabilities.
-
-## Troubleshooting
-
-- If you encounter any issues with video processing, ensure that FFmpeg is correctly installed and accessible from the command line.
-- Check the console output for any error messages or exceptions during runtime.
-
-
-## Acknowledgements
-
-- This project uses the Groq API for natural language processing tasks.
-- Streamlit is used for creating the web interface.
-- FFmpeg is used for video processing.
-
-
+## Acknowledgments
+Special thanks to the open-source community for the tools and libraries that made this project possible.
