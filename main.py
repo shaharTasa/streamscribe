@@ -294,7 +294,12 @@ def main():
                 st.dataframe(filtered_df, use_container_width=True)
     ###################################
                 with st.expander("Show full transcript"):
-                    st.text_area("Full Transcript", st.session_state.processed_content.full_text, height=300)
+                    st.text_area(
+                        "Full Transcript",
+                        st.session_state.processed_content.full_text[:1000],  # Show only first 1000 characters
+                        height=300
+                    )
+                    st.write("Displaying first 1000 characters...")
     ###################################
 
             with tab3:

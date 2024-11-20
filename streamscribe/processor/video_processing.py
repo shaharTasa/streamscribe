@@ -27,6 +27,8 @@ class TranscriptionSegment:
     start: float
     end: float
 
+
+
 class VideoProcessor:
     def __init__(self, model_size: str = "base", device: Optional[str] = None):
         self._check_ffmpeg()
@@ -120,63 +122,96 @@ class VideoProcessor:
             raise
 
     def transcribe(self, audio_path: Path) -> Dict:
-        """Transcribe audio using Whisper."""
-        try:
-            # Load audio data
-            audio_data = self._load_audio(audio_path)
-            
-            # Clear GPU memory if using CUDA
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
-
-            # Transcribe
-            try:
-                result = self.model.transcribe(
-                    audio_data,
-                    fp16=self.device == "cuda",
-                    language="en",
-                    verbose=True
-                )
-            except torch.cuda.OutOfMemoryError:
-                logger.warning("GPU memory error, falling back to CPU")
-                self.device = "cpu"
-                self.model = self._load_model()
-                result = self.model.transcribe(
-                    audio_data,
-                    fp16=False,
-                    language="en",
-                    verbose=True
-                )
-
-            if not result or 'segments' not in result:
-                raise RuntimeError("Transcription failed to produce valid output")
-
-            # Process segments
-            segments = [
-                TranscriptionSegment(
-                    text=segment['text'].strip(),
-                    start=segment['start'],
-                    end=segment['end']
-                )
-                for segment in result['segments']
-            ]
-
-            return {
+        # Load audio data
+        audio_data = self._load_audio(audio_path)
+        sample_rate = 16000  # Whisper uses 16kHz
+        segment_duration = 30  # seconds
+        segment_samples = segment_duration * sample_rate
+        total_samples = audio_data.shape[0]
+        segments = []
+        
+        for start in range(0, total_samples, segment_samples):
+            end = min(start + segment_samples, total_samples)
+            audio_segment = audio_data[start:end]
+            # Transcribe segment
+            result = self.model.transcribe(
+                audio_segment,
+                fp16=self.device == "cuda",
+                language="en",
+                verbose=False
+            )
+            segments.append({
                 'text': result['text'],
-                'segments': [
-                    {
-                        'text': seg.text,
-                        'start': str(timedelta(seconds=int(seg.start))),
-                        'end': str(timedelta(seconds=int(seg.end)))
-                    }
-                    for seg in segments
-                ],
-                'language': result.get('language', 'en')
-            }
+                'segments': result['segments']
+            })
+        # Combine results
+        full_text = ' '.join([seg['text'] for seg in segments])
+        all_segments = [s for seg in segments for s in seg['segments']]
+        
+        return {
+            'text': full_text,
+            'segments': all_segments,
+            'language': 'en'
+        }
 
-        except Exception as e:
-            logger.exception("Transcription failed")
-            raise RuntimeError(f"Transcription failed: {str(e)}")
+    # def transcribe(self, audio_path: Path) -> Dict:
+    #     """Transcribe audio using Whisper."""
+    #     try:
+    #         # Load audio data
+    #         audio_data = self._load_audio(audio_path)
+            
+    #         # Clear GPU memory if using CUDA
+    #         if torch.cuda.is_available():
+    #             torch.cuda.empty_cache()
+
+    #         # Transcribe
+    #         try:
+    #             result = self.model.transcribe(
+    #                 audio_data,
+    #                 fp16=self.device == "cuda",
+    #                 language="en",
+    #                 verbose=True
+    #             )
+    #         except torch.cuda.OutOfMemoryError:
+    #             logger.warning("GPU memory error, falling back to CPU")
+    #             self.device = "cpu"
+    #             self.model = self._load_model()
+    #             result = self.model.transcribe(
+    #                 audio_data,
+    #                 fp16=False,
+    #                 language="en",
+    #                 verbose=True
+    #             )
+
+    #         if not result or 'segments' not in result:
+    #             raise RuntimeError("Transcription failed to produce valid output")
+
+    #         # Process segments
+    #         segments = [
+    #             TranscriptionSegment(
+    #                 text=segment['text'].strip(),
+    #                 start=segment['start'],
+    #                 end=segment['end']
+    #             )
+    #             for segment in result['segments']
+    #         ]
+
+    #         return {
+    #             'text': result['text'],
+    #             'segments': [
+    #                 {
+    #                     'text': seg.text,
+    #                     'start': str(timedelta(seconds=int(seg.start))),
+    #                     'end': str(timedelta(seconds=int(seg.end)))
+    #                 }
+    #                 for seg in segments
+    #             ],
+    #             'language': result.get('language', 'en')
+    #         }
+
+    #     except Exception as e:
+    #         logger.exception("Transcription failed")
+    #         raise RuntimeError(f"Transcription failed: {str(e)}")
 
     def cleanup(self):
         """Clean up temporary files."""
