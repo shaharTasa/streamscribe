@@ -5,15 +5,13 @@ from pathlib import Path
 import tempfile
 from moviepy.editor import VideoFileClip
 import os
-import json
 import shutil
 from dataclasses import dataclass
 from datetime import timedelta
 import logging
 import subprocess
-from typing import Optional, Dict, List, Union
+from typing import Optional, Dict
 import soundfile as sf
-import ffmpeg
 import logging
 from pathlib import Path
 logger = logging.getLogger(__name__)

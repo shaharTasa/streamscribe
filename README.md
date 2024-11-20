@@ -61,15 +61,15 @@ if os.path.exists(ffmpeg_path):
 ```
 ## Usage 
 
-1. Run the Online App in this Link:???????????????????????
-https://www.youtube.com/watch?v=ed4XYtWZqgQ&ab_channel=%D7%A2%D7%99%D7%93%D7%9F%D7%A2%D7%9E%D7%93%D7%99IdanAmedi
+1. Run the Online App in this Link:
+
 ### Or
 2. Run the Streamlit App:
 Start the application by running the following command in your terminal:
 ```bash
 streamlit run main.py
 ```
-2. Processing Steps
+3. Processing Steps
    1. Choose Input Method
       - Select "Upload Video" or "YouTube URL"
    2. Video Upload
@@ -80,12 +80,12 @@ streamlit run main.py
       - Observe processing progress via spinner
 
     
-3. Analysis Exploration
+4. Analysis Exploration
 - **Q&A Tab**: Ask questions about video content
 - **Summary Tab**: View overall summary and filter segments
 - **Topics Tab**: Explore main topics and key points
 
-4. Additional Features
+5. Additional Features
 - **Suggested Questions**: Auto-generated for quick insights
 - **Full Transcript**: Available in expandable section
 
