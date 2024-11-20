@@ -22,12 +22,6 @@ nltk.download('punkt', quiet=True)
 
 load_dotenv()
 
-groq_api_key = os.getenv('GROQ_API_KEY')
-
-if groq_api_key:
-    st.success("GROQ_API_KEY is successfully loaded.")
-else:
-    st.error("GROQ_API_KEY is not set.")
 
 
 import logging
@@ -83,7 +77,7 @@ class SummarizationProcessor:
 
 class QnAProcessor:
     def __init__(self, groq_api_key: str, model_name="llama3-groq-70b-8192-tool-use-preview"):
-        self.groq_api_key = groq_api_key or os.environ.get("GROQ_API_KEY")
+        self.groq_api_key = groq_api_key or os.getenv('GROQ_API_KEY')
         if not self.groq_api_key:
             raise ValueError("GROQ_API_KEY is required")
 
