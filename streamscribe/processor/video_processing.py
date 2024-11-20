@@ -30,7 +30,7 @@ class TranscriptionSegment:
 
 
 class VideoProcessor:
-    def __init__(self, model_size: str = "base", device: Optional[str] = None):
+    def __init__(self, model_size: str = "tiny", device: Optional[str] = None):
         self._check_ffmpeg()
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.model_size = model_size
