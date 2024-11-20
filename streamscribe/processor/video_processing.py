@@ -14,7 +14,6 @@ from typing import Optional, Dict
 import soundfile as sf
 import logging
 from pathlib import Path
-import ffmpeg
 
 logger = logging.getLogger(__name__)
 
