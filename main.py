@@ -34,6 +34,14 @@ st.set_page_config(
 # Retrieve the GROQ_API_KEY from environment variables or Streamlit secrets
 groq_api_key = os.getenv('GROQ_API_KEY') or st.secrets.get("GROQ_API_KEY")
 
+@st.cache_resource
+def get_backend():
+    return StreamScribeBackend(groq_api_key=groq_api_key)
+
+if 'backend' not in st.session_state:
+    st.session_state.backend = get_backend()
+
+
 import subprocess
 
 def verify_ffmpeg():

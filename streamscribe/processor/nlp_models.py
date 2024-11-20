@@ -27,12 +27,6 @@ load_dotenv()
 # Retrieve the GROQ_API_KEY from environment variables
 groq_api_key = os.getenv('GROQ_API_KEY')
 
-@st.cache_resource
-def get_backend():
-    return StreamScribeBackend(groq_api_key=groq_api_key)
-
-if 'backend' not in st.session_state:
-    st.session_state.backend = get_backend()
 
 
 logging.basicConfig(
