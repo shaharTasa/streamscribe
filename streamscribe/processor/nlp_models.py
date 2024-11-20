@@ -27,11 +27,6 @@ load_dotenv()
 # Retrieve the GROQ_API_KEY from environment variables
 groq_api_key = os.getenv('GROQ_API_KEY')
 
-# Display a success or error message based on the presence of GROQ_API_KEY
-if groq_api_key:
-    st.success("GROQ_API_KEY is successfully loaded.")
-else:
-    st.error("GROQ_API_KEY is not set.")
 
 
 logging.basicConfig(

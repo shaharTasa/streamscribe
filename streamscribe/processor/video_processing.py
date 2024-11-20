@@ -21,6 +21,10 @@ logger = logging.getLogger(__name__)
 # if os.path.exists(ffmpeg_path):
 #     os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
 
+ffmpeg_path = os.getenv('FFMPEG_PATH')
+if os.path.exists(ffmpeg_path):
+    os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
+
 
 
 @dataclass

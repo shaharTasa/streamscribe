@@ -10,12 +10,6 @@ import uuid
 from streamscribe.processor.nlp_models import StreamScribeBackend
 from pathlib import Path
 
-ffmpeg_path = os.getenv('FFMPEG_PATH')
-if os.path.exists(ffmpeg_path):
-    os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
-
-
-
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,6 +17,12 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 
 load_dotenv()
+
+st.set_page_config(
+    page_title="StreamScribe",
+    page_icon="🎥",
+    initial_sidebar_state="collapsed"
+)
 
 def download_youtube_video(url: str, temp_dir: str) -> str:
     """Download YouTube video using yt-dlp with hidden progress output"""
@@ -105,11 +105,7 @@ def organize_questions_by_type(questions):
 
 
 def main():
-    st.set_page_config(
-        page_title="StreamScribe",
-        page_icon="🎥",
-        initial_sidebar_state="collapsed"
-    )
+
 
     # UI Setup
     col1, col2, col3 = st.columns(3)
