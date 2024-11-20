@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 import yt_dlp
 import uuid
 from pathlib import Path
-import imageio_ffmpeg  # Handling ffmpeg
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -19,17 +18,7 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 load_dotenv()
 
-# Set up FFmpeg using imageio_ffmpeg
-try:
-    ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
-    if not ffmpeg_exe or not os.path.exists(ffmpeg_exe):
-        raise RuntimeError("Failed to download FFmpeg using imageio_ffmpeg.")
-    ffmpeg_dir = os.path.dirname(ffmpeg_exe)
-    os.environ["PATH"] = f"{ffmpeg_dir}{os.pathsep}{os.environ.get('PATH', '')}"
-    logger.info(f"FFmpeg set up successfully at {ffmpeg_exe}")
-except Exception as e:
-    logger.error(f"Failed to set up FFmpeg: {e}")
-    raise
+
 
 # Import classes that depend on FFmpeg after setting PATH
 from streamscribe.processor.nlp_models import StreamScribeBackend
@@ -45,6 +34,19 @@ st.set_page_config(
 # Retrieve the GROQ_API_KEY from environment variables or Streamlit secrets
 groq_api_key = os.getenv('GROQ_API_KEY') or st.secrets.get("GROQ_API_KEY")
 
+import subprocess
+
+def verify_ffmpeg():
+    try:
+        result = subprocess.run(['ffmpeg', '-version'], capture_output=True, text=True, check=True)
+        logger.info("FFmpeg is installed:")
+        logger.info(result.stdout)
+    except Exception as e:
+        logger.error(f"FFmpeg verification failed: {e}")
+        st.error("FFmpeg is not installed properly.")
+
+# Call the verification function
+verify_ffmpeg()
 
 def download_youtube_video(url: str, temp_dir: str) -> str:
     """Download YouTube video using yt-dlp with hidden progress output"""

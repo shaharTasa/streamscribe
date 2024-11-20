@@ -29,7 +29,7 @@ class TranscriptionSegment:
 
 class VideoProcessor:
     def __init__(self, model_size: str = "base", device: Optional[str] = None):
-        # self._check_ffmpeg()
+        self._check_ffmpeg()
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.model_size = model_size
         self.model = self._load_model()
@@ -37,15 +37,15 @@ class VideoProcessor:
         self.supported_video_formats = {'.mp4', '.avi', '.mov', '.mkv', '.wmv'}
         self.supported_audio_formats = {'.mp3', '.wav', '.m4a', '.flac'}
 
-    # def _check_ffmpeg(self):
-    #     """Check if FFmpeg is available."""
-    #     try:
-    #         subprocess.run(['ffmpeg', '-version'], capture_output=True, check=True)
-    #     except (subprocess.CalledProcessError, FileNotFoundError):
-    #         raise RuntimeError(
-    #             "FFmpeg not found. Please install FFmpeg and make sure it's in your system PATH."
-    #             "\nDownload from: https://github.com/BtbN/FFmpeg-Builds/releases"
-    #         )
+    def _check_ffmpeg(self):
+        """Check if FFmpeg is available."""
+        try:
+            subprocess.run(['ffmpeg', '-version'], capture_output=True, check=True)
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            raise RuntimeError(
+                "FFmpeg not found. Please install FFmpeg and make sure it's in your system PATH."
+                "\nDownload from: https://github.com/BtbN/FFmpeg-Builds/releases"
+            )
 
     def _load_model(self) -> whisper.Whisper:
         """Load Whisper model with error handling."""
