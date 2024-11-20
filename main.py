@@ -112,7 +112,7 @@ def main():
     # UI Setup
     col1, col2, col3 = st.columns(3)
     with col2:
-        st.image("./StreamScribe2.png", width=400)
+        st.image("StreamScribe2.png", width=400)
 
     # Initialize session state for temp directory
     if 'temp_dir' not in st.session_state:
@@ -379,5 +379,5 @@ st.markdown("<div style='height: 400px;'></div>", unsafe_allow_html=True)  # Adj
 # Add logo at the bottom
 col1, col2, col3 = st.columns(3)
 with col2:
-    st.image(".\StreamScribe_flat2.png", width=200)
+    st.image("StreamScribe_flat2.png", width=200)
 ##########################################
