@@ -15,16 +15,18 @@ import soundfile as sf
 import logging
 from pathlib import Path
 import ffmpeg
+import imageio_ffmpeg
+
 
 logger = logging.getLogger(__name__)
 
-# ffmpeg_path = r"C:\ffmpeg-master-latest-win64-gpl\bin"
-# if os.path.exists(ffmpeg_path):
-#     os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
+# Get the path to the ffmpeg executable
+ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
 
-ffmpeg_path = os.getenv('FFMPEG_PATH')
-if os.path.exists(ffmpeg_path):
-    os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
+# Add the directory containing ffmpeg to PATH
+ffmpeg_dir = os.path.dirname(ffmpeg_exe)
+os.environ["PATH"] = f"{ffmpeg_dir}{os.pathsep}{os.environ.get('PATH', '')}"
+
 
 
 
@@ -195,43 +197,7 @@ class VideoProcessor:
     def __del__(self):
         self.cleanup()
         
-        
-    def _check_ffmpeg(self):
-        """Check if FFmpeg is available and configure path if needed."""
-        try:
-            # First try: check if FFmpeg is in PATH
-            subprocess.run(['ffmpeg', '-version'], capture_output=True, check=True)
-            return
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            # Common FFmpeg locations
-            ffmpeg_locations = [
-                r"C:\ffmpeg\bin",
-                r"C:\Program Files\ffmpeg\bin",
-                r"C:\Program Files (x86)\ffmpeg\bin",
-                os.path.expanduser("~\\ffmpeg\\bin")
-            ]
-            
-            # Check each location
-            for location in ffmpeg_locations:
-                if os.path.exists(os.path.join(location, "ffmpeg.exe")):
-                    # Add to PATH for this session
-                    os.environ['PATH'] = f"{location};{os.environ['PATH']}"
-                    try:
-                        # Verify it works
-                        subprocess.run(['ffmpeg', '-version'], capture_output=True, check=True)
-                        print(f"Found and using FFmpeg in: {location}")
-                        return
-                    except (subprocess.CalledProcessError, FileNotFoundError):
-                        continue
-            
-            # If we get here, FFmpeg wasn't found
-            raise RuntimeError(
-                "FFmpeg not found. Please install FFmpeg and make sure it's in your system PATH.\n"
-                "1. Download from: https://github.com/BtbN/FFmpeg-Builds/releases\n"
-                "2. Extract to C:\\ffmpeg\n"
-                "3. Add C:\\ffmpeg\\bin to your system PATH\n"
-                f"Current PATH: {os.environ['PATH']}"
-            )
+    
             
 
 

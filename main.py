@@ -9,6 +9,7 @@ import yt_dlp
 import uuid
 from streamscribe.processor.nlp_models import StreamScribeBackend
 from pathlib import Path
+import imageio_ffmpeg  # Handling ffmpeg
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -18,11 +19,20 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 
+ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+ffmpeg_dir = os.path.dirname(ffmpeg_exe)
+os.environ["PATH"] = f"{ffmpeg_dir}{os.pathsep}{os.environ.get('PATH', '')}"
+
+# Set page configuration first
 st.set_page_config(
     page_title="StreamScribe",
     page_icon="🎥",
+    layout="wide",
     initial_sidebar_state="collapsed"
 )
+
+# Retrieve the GROQ_API_KEY from environment variables or Streamlit secrets
+groq_api_key = os.getenv('GROQ_API_KEY') or st.secrets.get("GROQ_API_KEY")
 
 def download_youtube_video(url: str, temp_dir: str) -> str:
     """Download YouTube video using yt-dlp with hidden progress output"""

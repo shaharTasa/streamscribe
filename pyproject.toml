@@ -35,7 +35,7 @@ uuid = "^1.30"
 matplotlib = "^3.9.2"
 textblob = "^0.18.0.post0"
 ffmpeg-python = "^0.2.0"
-imageio-ffmpeg = "^0.5.1"
+imageio-ffmpeg = "^0.4.6"
 
 
 
