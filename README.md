@@ -1,3 +1,5 @@
+![StreamScribe Logo](StreamScribe2.png)
+
 # StreamScribe 🎥
 
 ## Overview
