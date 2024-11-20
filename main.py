@@ -1,3 +1,5 @@
+# main.py
+
 import os
 import streamlit as st
 import pandas as pd
@@ -7,7 +9,6 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import yt_dlp
 import uuid
-from streamscribe.processor.nlp_models import StreamScribeBackend
 from pathlib import Path
 import imageio_ffmpeg  # Handling ffmpeg
 
@@ -16,23 +17,34 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Load environment variables
-
 load_dotenv()
 
-ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
-ffmpeg_dir = os.path.dirname(ffmpeg_exe)
-os.environ["PATH"] = f"{ffmpeg_dir}{os.pathsep}{os.environ.get('PATH', '')}"
+# Set up FFmpeg using imageio_ffmpeg
+try:
+    ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+    if not ffmpeg_exe or not os.path.exists(ffmpeg_exe):
+        raise RuntimeError("Failed to download FFmpeg using imageio_ffmpeg.")
+    ffmpeg_dir = os.path.dirname(ffmpeg_exe)
+    os.environ["PATH"] = f"{ffmpeg_dir}{os.pathsep}{os.environ.get('PATH', '')}"
+    logger.info(f"FFmpeg set up successfully at {ffmpeg_exe}")
+except Exception as e:
+    logger.error(f"Failed to set up FFmpeg: {e}")
+    raise
+
+# Import classes that depend on FFmpeg after setting PATH
+from streamscribe.processor.nlp_models import StreamScribeBackend
 
 # Set page configuration first
 st.set_page_config(
     page_title="StreamScribe",
     page_icon="🎥",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="collapsed"
 )
 
 # Retrieve the GROQ_API_KEY from environment variables or Streamlit secrets
 groq_api_key = os.getenv('GROQ_API_KEY') or st.secrets.get("GROQ_API_KEY")
+
 
 def download_youtube_video(url: str, temp_dir: str) -> str:
     """Download YouTube video using yt-dlp with hidden progress output"""
@@ -116,7 +128,6 @@ def organize_questions_by_type(questions):
 
 def main():
 
-
     # UI Setup
     col1, col2, col3 = st.columns(3)
     with col2:
@@ -125,8 +136,6 @@ def main():
     # Initialize session state for temp directory
     if 'temp_dir' not in st.session_state:
         st.session_state.temp_dir = tempfile.mkdtemp()
-
-    #video_source = None
 
     try:
         # Create placeholders
@@ -165,7 +174,7 @@ def main():
                         with st.spinner("🎥 Processing video..."):
                             if 'backend' not in st.session_state:
                                 st.session_state.backend = StreamScribeBackend(
-                                    groq_api_key=os.getenv("GROQ_API_KEY")
+                                    groq_api_key=groq_api_key
                                 )
                                 video_success.success("Video processed successfully!")
 
@@ -206,7 +215,6 @@ def main():
                             st.session_state.last_url == youtube_url and
                             Path(st.session_state.youtube_video_path).exists()):
 
-                        #video_source = st.session_state.youtube_video_path
                         st.video(youtube_url)
                         st.success("Using previously downloaded video")
 
@@ -216,7 +224,6 @@ def main():
 
                             try:
                                 video_path = download_youtube_video(youtube_url, st.session_state.temp_dir)
-                                #video_source = video_path
                                 st.session_state.youtube_video_path = video_path
                                 st.session_state.last_url = youtube_url
 
@@ -233,7 +240,7 @@ def main():
                         with st.spinner("🎥 Processing video..."):
                             if 'backend' not in st.session_state:
                                 st.session_state.backend = StreamScribeBackend(
-                                    groq_api_key=os.getenv("GROQ_API_KEY")
+                                    groq_api_key=groq_api_key
                                 )
                                 video_success.success("Video processed successfully!")
                                 download_status.empty()
@@ -259,7 +266,7 @@ def main():
                     st.stop()
 
 
-        if hasattr(st.session_state, 'processed_content'):
+        if 'processed_content' in st.session_state:
             tab1, tab2, tab3 = st.tabs([
                 "❓ Q&A",
                 "📝 Summary",
@@ -283,10 +290,10 @@ def main():
                 # Apply the filters
                 filtered_df = df[(df['start_time'] >= start_time) & (df['end_time'] <= end_time)]
                 st.dataframe(filtered_df, use_container_width=True)
-###################################
+    ###################################
                 with st.expander("Show full transcript"):
                     st.text_area("Full Transcript", st.session_state.processed_content.full_text, height=300)
-###################################
+    ###################################
 
             with tab3:
                 st.write("### Main Topics Covered")
@@ -370,8 +377,15 @@ def main():
                                 st.markdown("**Answer:**")
                                 st.write(result['answer'])
 
-            #else:
-            #    st.warning("Please upload a video file or provide a YouTube URL.")
+    ##########################################
+        # Spacer to push the logo down
+        st.markdown("<div style='height: 400px;'></div>", unsafe_allow_html=True)  # Adjust height as needed
+
+        # Add logo at the bottom
+        col1, col2, col3 = st.columns(3)
+        with col2:
+            st.image("StreamScribe_flat2.png", width=200)
+    ##########################################
 
     except Exception as e:
         st.error("An error occurred during processing")
@@ -380,12 +394,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-##########################################
-# Spacer to push the logo down
-st.markdown("<div style='height: 400px;'></div>", unsafe_allow_html=True)  # Adjust height as needed
-
-# Add logo at the bottom
-col1, col2, col3 = st.columns(3)
-with col2:
-    st.image("StreamScribe_flat2.png", width=200)
-##########################################

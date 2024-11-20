@@ -14,19 +14,10 @@ from typing import Optional, Dict
 import soundfile as sf
 import logging
 from pathlib import Path
-import ffmpeg
-import imageio_ffmpeg
+
 
 
 logger = logging.getLogger(__name__)
-
-# Get the path to the ffmpeg executable
-ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
-
-# Add the directory containing ffmpeg to PATH
-ffmpeg_dir = os.path.dirname(ffmpeg_exe)
-os.environ["PATH"] = f"{ffmpeg_dir}{os.pathsep}{os.environ.get('PATH', '')}"
-
 
 
 
@@ -199,8 +190,6 @@ class VideoProcessor:
         
     
             
-
-
     def get_duration(self, file_path: Path) -> float:
         """Get the duration of a video file in seconds."""
         try:
