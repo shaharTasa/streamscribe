@@ -32,6 +32,8 @@ transformers = ">=4.41.0"
 sentence-transformers = "^3.3.0"
 yt-dlp = "^2024.11.18"
 uuid = "^1.30"
+matplotlib = "^3.9.2"
+textblob = "^0.18.0.post0"
 
 
 
