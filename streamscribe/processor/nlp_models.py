@@ -253,7 +253,7 @@ class QnAProcessor:
 class StreamScribeBackend:
     def __init__(self, groq_api_key: str):
         try:
-            self.video_processor = VideoProcessor(model_size="tiny")
+            self.video_processor = VideoProcessor(model_size="base")
             self.summarizer = SummarizationProcessor()
             self.qa_processor = QnAProcessor(groq_api_key=groq_api_key)
         except Exception as e:
