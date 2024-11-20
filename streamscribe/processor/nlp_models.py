@@ -16,15 +16,23 @@ import pandas as pd
 from datetime import timedelta
 from streamscribe.processor.video_processing import VideoProcessor
 from dotenv import load_dotenv
+import logging
 
 # Ensure nltk punkt tokenizer is available
 nltk.download('punkt', quiet=True)
 
+
 load_dotenv()
 
+# Retrieve the GROQ_API_KEY from environment variables
+groq_api_key = os.getenv('GROQ_API_KEY')
 
+# Display a success or error message based on the presence of GROQ_API_KEY
+if groq_api_key:
+    st.success("GROQ_API_KEY is successfully loaded.")
+else:
+    st.error("GROQ_API_KEY is not set.")
 
-import logging
 
 logging.basicConfig(
     level=logging.INFO,  # Set to DEBUG for more detailed logs
@@ -77,13 +85,15 @@ class SummarizationProcessor:
 
 class QnAProcessor:
     def __init__(self, groq_api_key: str, model_name="llama3-groq-70b-8192-tool-use-preview"):
-        self.groq_api_key = groq_api_key or os.getenv('GROQ_API_KEY')
+        self.groq_api_key = groq_api_key or os.environ.get("GROQ_API_KEY")
         if not self.groq_api_key:
+            logger.error("GROQ_API_KEY environment variable is missing.")
             raise ValueError("GROQ_API_KEY is required")
 
         try:
             self.llm = ChatGroq(model=model_name, api_key=self.groq_api_key)
         except Exception as e:
+            logger.error(f"Failed to initialize Groq LLM: {e}")
             raise RuntimeError(f"Failed to initialize Groq LLM: {e}")
 
         # Main QA prompt
