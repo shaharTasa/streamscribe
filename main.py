@@ -10,9 +10,9 @@ import uuid
 from streamscribe.processor.nlp_models import StreamScribeBackend
 from pathlib import Path
 
-ffmpeg_path = r"C:\Users\matar.aviv\Desktop\DS17\ffmpeg-2024-11-13-git-322b240cea-essentials_build\ffmpeg-2024-11-13-git-322b240cea-essentials_build\bin"
-if os.path.exists(ffmpeg_path):
-    os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
+# ffmpeg_path = r"C:\Users\matar.aviv\Desktop\DS17\ffmpeg-2024-11-13-git-322b240cea-essentials_build\ffmpeg-2024-11-13-git-322b240cea-essentials_build\bin"
+# if os.path.exists(ffmpeg_path):
+#     os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
