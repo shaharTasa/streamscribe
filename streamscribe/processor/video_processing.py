@@ -14,7 +14,15 @@ from typing import Optional, Dict
 import soundfile as sf
 import logging
 from pathlib import Path
+import ffmpeg
+
 logger = logging.getLogger(__name__)
+
+ffmpeg_path = r"C:\ffmpeg-master-latest-win64-gpl\bin"
+if os.path.exists(ffmpeg_path):
+    os.environ['PATH'] = f"{ffmpeg_path};{os.environ['PATH']}"
+
+
 
 @dataclass
 class TranscriptionSegment:

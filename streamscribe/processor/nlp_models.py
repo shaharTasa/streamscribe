@@ -21,6 +21,8 @@ nltk.download('punkt', quiet=True)
 
 logger = logging.getLogger(__name__)
 
+
+
 @dataclass
 class ProcessedVideo:
     """Class representing processed video content with transcription and analysis"""
